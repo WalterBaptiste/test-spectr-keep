@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Guess the Spectr — Keep Hush</title>
+  <meta name="description" content="Devine les membres de Spectr et tente de gagner 2×2 places pour la soirée Keep Hush.">
+  <style>
+    :root{--yellow:#fffc12;--purple:#41117c;--pink:#ff4387;--white:#fff;--black:#13081e}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:var(--purple);color:var(--white)}
+    body{font-family:Arial,Helvetica,sans-serif;font-weight:800;overflow-x:hidden}
+    button,input{font:inherit}.app{min-height:100svh;max-width:620px;margin:auto;position:relative;overflow:hidden;background:var(--purple)}
+    .screen{display:none;min-height:100svh;padding:18px;position:relative}.screen.on{display:flex;flex-direction:column}
+    .intro{background:linear-gradient(rgba(65,17,124,.12),rgba(65,17,124,.35)),url('assets/spectr-visual.jpg') center/cover}
+    .tag{align-self:flex-start;background:var(--pink);color:white;padding:7px 12px;border-radius:999px;text-transform:uppercase;font-size:.76rem;letter-spacing:.08em;transform:rotate(-2deg)}
+    h1{font-size:clamp(3.8rem,18vw,7rem);letter-spacing:-.08em;line-height:.72;margin:auto 0 12px;text-transform:uppercase;text-shadow:5px 5px 0 var(--pink);max-width:560px}
+    h1 span{display:block;color:var(--yellow);-webkit-text-stroke:3px var(--purple)}
+    .intro-card{background:white;color:var(--purple);padding:18px 18px 16px;border:5px solid var(--pink);box-shadow:7px 7px 0 var(--purple);transform:rotate(.6deg)}
+    .intro-card p{margin:0 0 10px;font-size:1.05rem}.intro-card small{display:block;font-weight:700;line-height:1.35}
+    .btn{border:0;width:100%;padding:16px;background:var(--yellow);color:var(--purple);text-transform:uppercase;cursor:pointer;box-shadow:5px 5px 0 var(--pink);margin-top:14px;font-size:1.05rem}.btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--pink)}
+    .game{gap:12px;background:linear-gradient(145deg,var(--purple),#271045)}
+    .top{display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}.counter{color:var(--yellow);font-size:1.4rem}.timer{color:var(--pink)}
+    .progress{display:flex;gap:5px}.pip{height:7px;flex:1;background:#76509b}.pip.ok{background:var(--yellow)}.pip.no{background:var(--pink)}.pip.now{background:white}
+    .arena{min-height:250px;flex:1;position:relative;border:4px solid var(--yellow);background:var(--pink);overflow:hidden;touch-action:none;box-shadow:7px 7px 0 var(--yellow)}
+    .orb{position:absolute;width:145px;height:145px;border-radius:47% 53% 55% 45%;background:var(--yellow);border:7px solid var(--purple);display:grid;place-items:center;color:var(--purple);font-size:2.6rem;letter-spacing:-.08em;box-shadow:8px 8px 0 rgba(65,17,124,.5);user-select:none;will-change:transform}
+    .photo-note{position:absolute;left:10px;bottom:8px;font-size:.69rem;text-transform:uppercase;color:var(--purple);opacity:.72}
+    .puzzle{background:white;color:var(--purple);padding:16px;border:4px solid var(--pink)}
+    .mask{text-align:center;font-size:clamp(2rem,10vw,3.4rem);letter-spacing:.08em;line-height:1.1;margin:4px 0 14px;overflow-wrap:anywhere}
+    .guess{width:100%;padding:14px;border:3px solid var(--purple);background:#fff;color:var(--purple);text-transform:uppercase;font-size:1.1rem;border-radius:0}.guess:focus{outline:4px solid var(--yellow)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions .btn{margin-top:10px}.actions .secondary{background:var(--pink);color:white;box-shadow:none}
+    .hint{min-height:1.5em;margin:10px 0 0;font-size:.9rem;line-height:1.35}.hint-btn{border:0;background:none;color:var(--purple);text-decoration:underline;padding:10px 0 0;cursor:pointer;text-transform:uppercase}
+    .feedback{position:fixed;inset:0;background:rgba(19,8,30,.88);z-index:4;display:none;place-items:center;padding:22px}.feedback.on{display:grid}.modal{width:min(500px,100%);background:var(--yellow);color:var(--purple);padding:25px;border:6px solid var(--pink);box-shadow:10px 10px 0 white}.verdict{font-size:3rem;line-height:.8;text-transform:uppercase;margin:0 0 16px}.answer{font-size:1.6rem;margin-bottom:8px}.bio{font-weight:700;line-height:1.4}
+    .end{background:var(--yellow);color:var(--purple);justify-content:center}.end h2{font-size:clamp(3.5rem,16vw,6rem);line-height:.8;text-transform:uppercase;margin:0 0 22px}.score{font-size:5rem;line-height:1;color:var(--pink);text-shadow:4px 4px 0 white}.stats{display:flex;gap:25px;margin:14px 0 24px}.stats span{display:block;font-size:.72rem;text-transform:uppercase}.end-card{background:var(--purple);color:white;padding:20px;border:5px solid var(--pink)}.end-card strong{color:var(--yellow);font-size:1.25rem}.entry-form{display:grid;gap:10px;margin-top:16px}.entry-form label{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em}.entry-form input{width:100%;padding:13px;border:3px solid var(--pink);background:white;color:var(--purple);border-radius:0}.entry-form input:focus{outline:4px solid var(--yellow)}.entry-form .btn{box-shadow:5px 5px 0 var(--pink);margin-top:4px}.form-status{min-height:1.4em;margin:7px 0 0;font-size:.86rem;color:var(--yellow)}.end .btn{box-shadow:5px 5px 0 var(--purple)}.share{background:white}.fine{font-size:.78rem;font-weight:700;opacity:.75;margin-top:12px}
+    @media(max-width:390px){.arena{min-height:210px}.orb{width:120px;height:120px}.screen{padding:14px}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <section class="screen intro on" id="intro">
+    <div class="tag">2 × 2 places à gagner</div>
+    <h1>Guess <span>the Spectr</span></h1>
+    <div class="intro-card">
+      <p>7 membres. 7 noms. À toi de jouer.</p>
+      <small>Devine les artistes le plus vite possible. Tu peux demander un indice, mais chaque indice ajoute 30 secondes à ton classement.</small>
+      <button class="btn" id="start">Jouer pour Keep Hush</button>
+    </div>
+  </section>
+
+  <section class="screen game" id="game">
+    <div class="top"><span class="counter" id="counter">01 / 07</span><span class="timer" id="timer">00:00</span></div>
+    <div class="progress" id="progress"></div>
+      <div class="arena" id="arena"><div class="orb" id="orb">?</div><span class="photo-note">Portrait temporaire — les photos détourées viendront ici</span></div>
+    <div class="puzzle">
+      <div class="mask" id="mask"></div>
+      <input class="guess" id="guess" autocomplete="off" autocapitalize="characters" placeholder="Ton choix" aria-label="Nom de l’artiste">
+      <button class="hint-btn" id="hintBtn">Voir l’indice</button>
+      <p class="hint" id="hint"></p>
+      <div class="actions"><button class="btn secondary" id="skip">Passer</button><button class="btn" id="validate">Valider</button></div>
+    </div>
+  </section>
+
+  <section class="screen end" id="end">
+    <h2>Bien joué&nbsp;!</h2>
+    <div class="score" id="score">0/7</div>
+    <div class="stats"><div><span>Temps</span><b id="finalTime">00:00</b></div><div><span>Indices</span><b id="finalHints">0</b></div></div>
+    <div class="end-card">
+      <strong>2 × 2 places pour Keep Hush</strong>
+      <p>Envoie ton score pour participer au tirage au sort. Ton contact servira uniquement à te prévenir si tu gagnes.</p>
+      <form class="entry-form" id="entryForm">
+        <label for="playerName">Ton nom</label>
+        <input id="playerName" name="name" maxlength="80" autocomplete="name" required>
+        <label for="playerContact">Ton Instagram ou ton mail</label>
+        <input id="playerContact" name="contact" maxlength="150" required>
+        <button class="btn" id="sendScore" type="submit">Envoyer mon score</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+    </div>
+    <button class="btn share" id="share">Copier mon score</button>
+    <button class="btn" id="again">Rejouer</button>
+    <p class="fine">Une seule participation par personne. Les informations sont transmises à Spectr pour gérer le concours.</p>
+  </section>
+</main>
+
+<div class="feedback" id="feedback" role="dialog" aria-modal="true">
+  <div class="modal"><h3 class="verdict" id="verdict"></h3><div class="answer" id="answer"></div><div class="bio" id="bio"></div><button class="btn" id="next">Suivant</button></div>
+</div>
+
+<script>
+const ARTISTS=[
+ {name:'AOUJ',hint:'Le nouveau roi de la baile funk à Strasbourg.',mask:'A__J'},
+ {name:'GTK',hint:'Toujours le mulet affûté, il est celui qui fait tourner les têtes.',mask:'G__'},
+ {name:'LAKAII',hint:'Il a tenu la barque d’un bar et surtout fait le buzz sur les réseaux cet été.',mask:'L____I'},
+ {name:'OG TT',hint:'Il s’est fait opérer des croisés, mais est toujours présent.',mask:'O_ T_'},
+ {name:'BLANKA',hint:'Il est le plus parisien de Spectr.',mask:'B____A'},
+ {name:'RAVER',hint:'Il n’y a pas que sa selecta qui fait tourner la tête.',mask:'R___R'},
+ {name:'SENORITA',hint:'Elle a enflammé les Eurockéennes avec CLT et fait partie de Seul Amour.',mask:'S______A'}
+];
+const SCORE_ENDPOINT='https://script.google.com/macros/s/AKfycbynfahwnaUYKcDuN_Bc3GhzRbrpASs6fWgQYBAdtqW3LgLS7QgkQBr-ZyR9KYrRQYY/exec';
+const $=s=>document.querySelector(s);let i=0,results=[],hints=0,startAt=0,tick,x=35,y=35,vx=72,vy=55,last=0,raf;
+const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/gi,'').toLowerCase();
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$('#'+id).classList.add('on')}
+function fmt(ms){let s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function pips(){ $('#progress').innerHTML=ARTISTS.map((_,n)=>`<span class="pip ${results[n]===true?'ok':results[n]===false?'no':n===i?'now':''}"></span>`).join('') }
+function round(){let a=ARTISTS[i];$('#counter').textContent=String(i+1).padStart(2,'0')+' / '+String(ARTISTS.length).padStart(2,'0');$('#mask').textContent=a.mask;$('#orb').textContent=a.name[0]+'?';$('#guess').value='';$('#hint').textContent='';$('#hintBtn').textContent='Voir l’indice';$('#hintBtn').disabled=false;pips();setTimeout(()=>$('#guess').focus(),80)}
+function animate(t){let a=$('#arena'),o=$('#orb'),dt=Math.min((t-last)/1000,.035)||0;last=t;x+=vx*dt;y+=vy*dt;let mw=a.clientWidth-o.offsetWidth,mh=a.clientHeight-o.offsetHeight;if(x<0||x>mw){vx*=-1;x=Math.max(0,Math.min(mw,x))}if(y<0||y>mh){vy*=-1;y=Math.max(0,Math.min(mh,y))}o.style.transform=`translate(${x}px,${y}px) rotate(${Math.sin(t/700)*7}deg)`;raf=requestAnimationFrame(animate)}
+function start(){i=0;results=[];hints=0;startAt=Date.now();show('game');round();clearInterval(tick);tick=setInterval(()=>$('#timer').textContent=fmt(Date.now()-startAt),500);cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(animate)}
+function answer(ok){results[i]=ok;let a=ARTISTS[i];$('#verdict').textContent=ok?'Exact !':'Raté !';$('#answer').textContent=a.name;$('#bio').textContent=a.hint;$('#next').textContent=i===ARTISTS.length-1?'Voir mon score':'Suivant';$('#feedback').classList.add('on');pips()}
+function finish(){clearInterval(tick);cancelAnimationFrame(raf);let elapsed=Date.now()-startAt,good=results.filter(Boolean).length;$('#score').textContent=good+'/'+ARTISTS.length;$('#finalTime').textContent=fmt(elapsed);$('#finalHints').textContent=hints;window.gameResult={good,elapsed,hints};show('end')}
+$('#start').onclick=start;$('#validate').onclick=()=>answer(norm($('#guess').value)===norm(ARTISTS[i].name));$('#skip').onclick=()=>answer(false);$('#guess').onkeydown=e=>{if(e.key==='Enter')$('#validate').click()};
+$('#hintBtn').onclick=()=>{$('#hint').textContent=ARTISTS[i].hint;$('#hintBtn').disabled=true;hints++};
+$('#next').onclick=()=>{$('#feedback').classList.remove('on');i++;i>=ARTISTS.length?finish():round()};$('#again').onclick=start;
+$('#entryForm').onsubmit=async e=>{e.preventDefault();let r=window.gameResult;if(!r)return;let button=$('#sendScore'),status=$('#formStatus');button.disabled=true;button.textContent='Envoi…';status.textContent='';let payload={name:$('#playerName').value.trim(),contact:$('#playerContact').value.trim(),score:r.good,total:ARTISTS.length,timeMs:r.elapsed,hints:r.hints,penalty:Math.round(r.elapsed/1000)+r.hints*30,userAgent:navigator.userAgent};try{await fetch(SCORE_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});button.textContent='Participation envoyée !';status.textContent='C’est enregistré. Bonne chance !';localStorage.setItem('spectr-entry-sent','1')}catch(error){button.disabled=false;button.textContent='Réessayer';status.textContent='L’envoi a échoué. Vérifie ta connexion.'}};
+$('#share').onclick=async()=>{let r=window.gameResult,text=`J’ai fait ${r.good}/${ARTISTS.length} à Guess the Spectr en ${fmt(r.elapsed)} !`;try{await navigator.clipboard.writeText(text);$('#share').textContent='Score copié !'}catch{$('#share').textContent=text}};
+</script>
+</body>
+</html>

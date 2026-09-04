@@ -22,6 +22,12 @@
     .top{display:flex;justify-content:space-between;align-items:center;text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}.counter{color:var(--yellow);font-size:1.4rem}.timer{color:var(--pink)}
     .progress{display:flex;gap:5px}.pip{height:7px;flex:1;background:#76509b}.pip.ok{background:var(--yellow)}.pip.no{background:var(--pink)}.pip.now{background:white}
     .arena{min-height:250px;flex:1;position:relative;border:4px solid var(--yellow);background:var(--pink);overflow:hidden;touch-action:none;box-shadow:7px 7px 0 var(--yellow)}
+    .orb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
     .orb{position:absolute;width:145px;height:145px;border-radius:47% 53% 55% 45%;background:var(--yellow);border:7px solid var(--purple);display:grid;place-items:center;color:var(--purple);font-size:2.6rem;letter-spacing:-.08em;box-shadow:8px 8px 0 rgba(65,17,124,.5);user-select:none;will-change:transform}
     .photo-note{position:absolute;left:10px;bottom:8px;font-size:.69rem;text-transform:uppercase;color:var(--purple);opacity:.72}
     .puzzle{background:white;color:var(--purple);padding:16px;border:4px solid var(--pink)}
@@ -107,7 +113,9 @@ const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$('#'+id).classList.add('on')}
 function fmt(ms){let s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function pips(){ $('#progress').innerHTML=ARTISTS.map((_,n)=>`<span class="pip ${results[n]===true?'ok':results[n]===false?'no':n===i?'now':''}"></span>`).join('') }
-function round(){let a=ARTISTS[i];$('#counter').textContent=String(i+1).padStart(2,'0')+' / '+String(ARTISTS.length).padStart(2,'0');$('#mask').textContent=a.mask;$('#orb').textContent=a.name[0]+'?';$('#guess').value='';$('#hint').textContent='';$('#hintBtn').textContent='Voir l’indice';$('#hintBtn').disabled=false;pips();setTimeout(()=>$('#guess').focus(),80)}
+function round(){let a=ARTISTS[i];$('#counter').textContent=String(i+1).padStart(2,'0')+' / '+String(ARTISTS.length).padStart(2,'0');$('#mask').textContent=a.mask;$('#orb').innerHTML = a.photo
+  ? `<img src="${a.photo}" alt="Portrait mystère">`
+  : a.name[0] + '?';$('#guess').value='';$('#hint').textContent='';$('#hintBtn').textContent='Voir l’indice';$('#hintBtn').disabled=false;pips();setTimeout(()=>$('#guess').focus(),80)}
 function animate(t){let a=$('#arena'),o=$('#orb'),dt=Math.min((t-last)/1000,.035)||0;last=t;x+=vx*dt;y+=vy*dt;let mw=a.clientWidth-o.offsetWidth,mh=a.clientHeight-o.offsetHeight;if(x<0||x>mw){vx*=-1;x=Math.max(0,Math.min(mw,x))}if(y<0||y>mh){vy*=-1;y=Math.max(0,Math.min(mh,y))}o.style.transform=`translate(${x}px,${y}px) rotate(${Math.sin(t/700)*7}deg)`;raf=requestAnimationFrame(animate)}
 function start(){i=0;results=[];hints=0;startAt=Date.now();show('game');round();clearInterval(tick);tick=setInterval(()=>$('#timer').textContent=fmt(Date.now()-startAt),500);cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(animate)}
 function answer(ok){results[i]=ok;let a=ARTISTS[i];$('#verdict').textContent=ok?'Exact !':'Raté !';$('#answer').textContent=a.name;$('#bio').textContent=a.hint;$('#next').textContent=i===ARTISTS.length-1?'Voir mon score':'Suivant';$('#feedback').classList.add('on');pips()}

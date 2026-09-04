@@ -28,6 +28,9 @@
   object-fit: contain;
   pointer-events: none;
 }
+    .orb {
+  overflow: hidden;
+}
     .orb{position:absolute;width:145px;height:145px;border-radius:47% 53% 55% 45%;background:var(--yellow);border:7px solid var(--purple);display:grid;place-items:center;color:var(--purple);font-size:2.6rem;letter-spacing:-.08em;box-shadow:8px 8px 0 rgba(65,17,124,.5);user-select:none;will-change:transform}
     .photo-note{position:absolute;left:10px;bottom:8px;font-size:.69rem;text-transform:uppercase;color:var(--purple);opacity:.72}
     .puzzle{background:white;color:var(--purple);padding:16px;border:4px solid var(--pink)}
@@ -99,12 +102,12 @@ const ARTISTS=[
  {name:'LAKAII', hint:'Il a tenu la barque d’un bar et surtout fait le buzz sur les réseaux cet été.', mask:'_A_A__'},
  {name:'OG TT', hint:'Il s’est fait opérer des croisés, mais est toujours présent.', mask:'_G _T'},
  {name:'BLANKA', hint:'Il est le plus parisien de Spectr.', mask:'_L_N__'},
- {
+{
   name:'RAVER',
-  hint:'Il n'y a pas que sa selecta qui fait tourner la tête.',
+  hint:"Il n'y a pas que sa selecta qui fait tourner la tête.",
   mask:'R_V__',
-  photo:'assets/Oceane.jpg'
-}
+  photo:'assets/Oceane.png'
+ },
  {name:'SENORITA', hint:'Elle a enflammé les Eurockéennes avec CLT et fait partie de Seul Amour.', mask:'_E_O_I__'}
 ];
 const SCORE_ENDPOINT='https://script.google.com/macros/s/AKfycbynfahwnaUYKcDuN_Bc3GhzRbrpASs6fWgQYBAdtqW3LgLS7QgkQBr-ZyR9KYrRQYY/exec';

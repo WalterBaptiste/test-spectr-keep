@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#160526">
+  <meta name="description" content="Spectr — La quête du Karmen, une aventure point-and-click 8-bit dans les vrais décors du Karmen Camina.">
+  <title>Spectr — La quête du Karmen</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand" aria-label="Spectr">
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div class="brand-copy">
+          <strong>SPECTR</strong>
+          <span>La quête du Karmen</span>
+        </div>
+      </div>
+
+      <div class="crowd-hud" aria-label="Jauge de public">
+        <span class="hud-label">Public</span>
+        <div class="meter"><div class="meter-fill" id="crowdFill"></div></div>
+        <span class="hud-value" id="crowdValue">60 / 500</span>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" id="soundBtn" type="button" aria-label="Couper le son" title="Son">♪</button>
+        <button class="icon-btn" id="restartBtn" type="button" aria-label="Recommencer la partie" title="Recommencer">↻</button>
+      </div>
+    </header>
+
+    <main id="game">
+      <section class="screen intro scanlines active" id="introScreen" data-screen="intro">
+        <div class="intro-card">
+          <p class="eyebrow">Une histoire point-and-click par Spectr</p>
+          <h1 class="mega-title">La quête<br>du <span>Karmen</span></h1>
+          <p class="lede">
+            Trouve l’entrée, passe le physio, prépare ton sac et choisis ton chemin.
+            Tu arriveras au son… mais pas forcément à l’heure.
+          </p>
+          <div class="mission-strip" aria-label="Étapes du jeu">
+            <div><b>01</b> Crée ta vibe</div>
+            <div><b>02</b> Entre au Karmen</div>
+            <div><b>03</b> Écris ta nuit</div>
+          </div>
+          <div class="btn-row">
+            <button class="pixel-btn pink" id="startBtn" type="button">Lancer l’histoire</button>
+            <button class="pixel-btn secondary" id="resumeBtn" type="button" hidden>Reprendre</button>
+          </div>
+          <p class="small-note">3 à 4 minutes · Plusieurs chemins · Tous les chemins mènent au son</p>
+        </div>
+      </section>
+
+      <section class="screen creator" id="creatorScreen" data-screen="creator">
+        <div class="creator-panel">
+          <div class="creator-copy">
+            <span class="step-label">Prologue</span>
+            <h2>Choisis ton look</h2>
+            <p>
+              Les 10 personnages animés du crew sont réunis ici.
+              Aucun genre imposé : choisis simplement ta vibe et regarde sa deuxième pose.
+            </p>
+            <label class="name-label" for="playerName">Ton blaze (facultatif)</label>
+            <input class="name-input" id="playerName" maxlength="16" autocomplete="nickname" placeholder="Night rider">
+          </div>
+          <div class="avatar-grid" id="avatarGrid" aria-label="Choix parmi 10 personnages animés"></div>
+          <div class="creator-actions">
+            <button class="pixel-btn" id="confirmAvatarBtn" type="button">Ce look est le mien →</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen scene-screen" id="exteriorScreen" data-screen="exterior">
+        <div class="scene-wrap scanlines">
+          <div class="scene-frame exterior-frame">
+            <img class="scene-image" src="assets/venue-exterior.webp" alt="L’extérieur du Karmen Camina et ses différentes portes.">
+            <div class="scene-shade"></div>
+            <div class="scene-title">Dehors · 20:31 · Où est l’entrée ?</div>
+
+            <div class="privacy-mosaic child-mask" aria-hidden="true"></div>
+            <button class="hotspot" data-exterior-action="left-door" style="--x:8.5%;--y:52%;" aria-label="Essayer la porte de gauche"><span>Porte gauche</span></button>
+            <button class="hotspot" data-exterior-action="windows" style="--x:57%;--y:37%;" aria-label="Essayer les grandes fenêtres"><span>Grandes vitres</span></button>
+            <button class="hotspot" data-exterior-action="terrace" style="--x:91%;--y:60%;" aria-label="Chercher l’entrée près de la terrasse"><span>Terrasse</span></button>
+            <button class="hotspot npc-hotspot" data-exterior-action="child" style="--x:51.5%;--y:77%;" aria-label="Demander son chemin au petit personnage pixelisé"><span>Petit guide</span></button>
+          </div>
+        </div>
+        <div class="scene-footer">
+          <div class="portrait"><div class="avatar-sprite current-avatar" data-avatar="0"></div></div>
+          <div class="scene-footer-copy">
+            <p class="objective"><b>Mission :</b> trouve la vraie entrée. Un petit PNJ connaît peut-être le chemin.</p>
+            <div class="journey-status"><span>Retard <b data-lateness>0 min</b></span><span>Culture <b data-knowledge>0</b></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen scene-screen" id="entranceScreen" data-screen="entrance">
+        <div class="scene-wrap scanlines">
+          <div class="scene-frame portrait-frame entrance-frame">
+            <img class="scene-image" src="assets/venue-entrance.webp" alt="Le couloir d’entrée du Karmen Camina.">
+            <div class="scene-shade"></div>
+            <div class="scene-title">Entrée · 20:36 · Face au physio</div>
+            <div class="avatar-sprite legacy scene-npc physio-npc" data-avatar="8" aria-hidden="true"></div>
+            <button class="hotspot" data-entrance-action="physio" style="--x:67%;--y:72%;" aria-label="Parler au physio"><span>Physio</span></button>
+            <button class="hotspot" data-entrance-action="door" style="--x:49%;--y:39%;" aria-label="Essayer de passer la porte"><span>Porte</span></button>
+          </div>
+        </div>
+        <div class="scene-footer">
+          <div class="portrait"><div class="avatar-sprite current-avatar" data-avatar="0"></div></div>
+          <div class="scene-footer-copy">
+            <p class="objective"><b>Mission :</b> écoute le physio et réponds franchement. Ton attitude compte.</p>
+            <div class="journey-status"><span>Retard <b data-lateness>0 min</b></span><span>Culture <b data-knowledge>0</b></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen scene-screen" id="barScreen" data-screen="bar">
+        <div class="scene-wrap scanlines">
+          <div class="scene-frame bar-frame">
+            <img class="scene-image" src="assets/venue-bar.webp" alt="Le bar du Karmen Camina.">
+            <div class="scene-shade"></div>
+            <div class="scene-title">Le bar · 20:47 · Prépare ton sac</div>
+
+            <div class="privacy-mosaic face-mask face-a" aria-hidden="true"></div>
+            <div class="privacy-mosaic face-mask face-b" aria-hidden="true"></div>
+            <div class="privacy-mosaic face-mask face-c" aria-hidden="true"></div>
+            <div class="privacy-mosaic face-mask face-d" aria-hidden="true"></div>
+            <div class="privacy-mosaic face-mask face-e" aria-hidden="true"></div>
+            <div class="privacy-mosaic face-mask face-f" aria-hidden="true"></div>
+
+            <button class="hotspot" data-bar-action="wall" style="--x:7%;--y:52%;" aria-label="Examiner le mur du bar"><span>Mur</span></button>
+            <button class="hotspot" data-bar-action="tables" style="--x:27%;--y:70%;" aria-label="Fouiller les tables"><span>Tables</span></button>
+            <button class="hotspot" data-bar-action="dog" style="--x:44%;--y:86%;" aria-label="Regarder près du chien"><span>Chien</span></button>
+            <button class="hotspot" data-bar-action="counter" style="--x:72%;--y:66%;" aria-label="Fouiller le comptoir"><span>Comptoir</span></button>
+            <button class="hotspot" data-bar-action="shelves" style="--x:89%;--y:28%;" aria-label="Examiner les étagères"><span>Étagères</span></button>
+            <button class="hotspot" data-bar-action="exit" style="--x:55%;--y:31%;" aria-label="Quitter le bar pour l’escalier"><span>Escalier</span></button>
+          </div>
+        </div>
+        <div class="scene-footer">
+          <div class="portrait"><div class="avatar-sprite current-avatar" data-avatar="0"></div></div>
+          <div class="scene-footer-copy">
+            <p class="objective"><b>Mission :</b> prends exactement 2 objets, puis trouve l’escalier.</p>
+            <div class="inventory" data-inventory></div>
+            <div class="journey-status"><span>Retard <b data-lateness>0 min</b></span><span>Culture <b data-knowledge>0</b></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen scene-screen" id="stairsScreen" data-screen="stairs">
+        <div class="scene-wrap scanlines">
+          <div class="scene-frame portrait-frame stairs-frame">
+            <img class="scene-image" src="assets/venue-stairs.webp" alt="L’escalier du Karmen Camina avec plusieurs directions possibles.">
+            <div class="scene-shade"></div>
+            <div class="scene-title">L’escalier · 21:03 · Trois directions</div>
+            <div class="privacy-mosaic stairs-face-one" aria-hidden="true"></div>
+            <div class="privacy-mosaic stairs-face-two" aria-hidden="true"></div>
+
+            <button class="hotspot route-point" data-stairs-action="terrace" style="--x:11%;--y:43%;" aria-label="Monter à gauche vers la terrasse"><span>Terrasse</span></button>
+            <button class="hotspot route-point" data-stairs-action="expo" style="--x:43%;--y:51%;" aria-label="Monter vers l’exposition"><span>Expo</span></button>
+            <button class="hotspot route-point" data-stairs-action="sound" style="--x:58%;--y:82%;" aria-label="Descendre directement vers le son"><span>Le son</span></button>
+          </div>
+        </div>
+        <div class="scene-footer">
+          <div class="portrait"><div class="avatar-sprite current-avatar" data-avatar="0"></div></div>
+          <div class="scene-footer-copy">
+            <p class="objective"><b>Choix :</b> le son est en bas. L’expo et la terrasse cachent peut-être autre chose… et font perdre du temps.</p>
+            <div class="journey-status"><span>Retard <b data-lateness>0 min</b></span><span>Culture <b data-knowledge>0</b></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen scene-screen" id="routeScreen" data-screen="route">
+        <div class="scene-wrap scanlines">
+          <div class="scene-frame route-frame">
+            <img class="scene-image" id="routeImage" src="assets/venue-gallery.webp" alt="Détour dans le Karmen Camina.">
+            <div class="scene-shade"></div>
+            <div class="scene-title" id="routeTitle">Un détour</div>
+            <button class="hotspot" id="routePersonBtn" data-route-action="person" style="--x:21%;--y:54%;" aria-label="Parler à la personne"><span>Quelqu’un</span></button>
+            <button class="hotspot" id="routeDetailBtn" data-route-action="detail" style="--x:62%;--y:43%;" aria-label="Examiner le détail"><span>Détail</span></button>
+            <button class="hotspot" id="routeExitBtn" data-route-action="exit" style="--x:91%;--y:68%;" aria-label="Rejoindre le son"><span>Vers le son</span></button>
+          </div>
+        </div>
+        <div class="scene-footer">
+          <div class="portrait"><div class="avatar-sprite current-avatar" data-avatar="0"></div></div>
+          <div class="scene-footer-copy">
+            <p class="objective" id="routeObjective"><b>Mission :</b> choisis ce qui mérite ton temps.</p>
+            <div class="inventory" data-inventory></div>
+            <div class="journey-status"><span>Retard <b data-lateness>0 min</b></span><span>Culture <b data-knowledge>0</b></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen scene-screen" id="clubScreen" data-screen="club">
+        <div class="scene-wrap scanlines">
+          <div class="scene-frame club-frame">
+            <img class="scene-image" src="assets/venue-dancefloor.webp" alt="Le système son et le dancefloor du Karmen Camina pendant une soirée Spectr.">
+            <div class="scene-shade"></div>
+            <div class="scene-title" id="clubTitle">Système son · Enfin</div>
+
+            <button class="hotspot" data-club-action="crowd" style="--x:33%;--y:72%;" aria-label="Rejoindre le public"><span>Public</span></button>
+            <button class="hotspot" data-club-action="booth" style="--x:54%;--y:55%;" aria-label="Aller vers la cabine DJ"><span>DJ booth</span></button>
+            <button class="hotspot" data-club-action="speaker" style="--x:77%;--y:37%;" aria-label="Se placer près du système son"><span>Caisson</span></button>
+            <button class="hotspot" data-club-action="crew" style="--x:65%;--y:75%;" aria-label="Aider une personne du crew"><span>Crew</span></button>
+          </div>
+        </div>
+        <div class="scene-footer">
+          <div class="portrait"><div class="avatar-sprite current-avatar" data-avatar="0"></div></div>
+          <div class="scene-footer-copy">
+            <p class="objective" id="clubObjective"><b>Final :</b> tu es devant le son. Choisis comment tu termines cette histoire.</p>
+            <div class="inventory" data-inventory></div>
+            <div class="journey-status"><span>Retard <b data-lateness>0 min</b></span><span>Culture <b data-knowledge>0</b></span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen final" id="finalScreen" data-screen="final">
+        <div class="final-grid">
+          <div class="story-wrap">
+            <canvas id="storyCanvas" width="1080" height="1920" aria-label="Carte de résultat à partager"></canvas>
+          </div>
+          <div class="final-copy">
+            <span class="result-badge">Histoire terminée</span>
+            <h2>Ton profil :<br><span class="result-profile" id="resultProfile">Passe-partout du Karmen</span></h2>
+            <p class="result-copy" id="resultCopy"></p>
+            <div class="result-stats">
+              <div class="stat-card"><span>Public réuni</span><strong id="resultCrowd">0 / 500</strong></div>
+              <div class="stat-card"><span>Retard</span><strong id="resultLate">0 min</strong></div>
+              <div class="stat-card"><span>Culture</span><strong id="resultKnowledge">0 pts</strong></div>
+              <div class="stat-card"><span>Objets</span><strong id="resultItems">0 / 2</strong></div>
+            </div>
+            <div class="combo-callout" id="comboCallout"></div>
+            <p class="result-sync" id="resultSync" role="status" aria-live="polite">Envoi du résultat au classement Spectr…</p>
+            <div class="btn-row final-buttons">
+              <button class="pixel-btn pink" id="shareBtn" type="button">Partager le résultat</button>
+              <button class="pixel-btn secondary" id="downloadBtn" type="button">Télécharger la Story</button>
+              <button class="pixel-btn dark" id="replayBtn" type="button">Rejouer</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <aside class="music-dock" id="musicDock" hidden aria-label="Lecteur musical Spectr">
+    <button class="music-play" id="musicPlayBtn" type="button" aria-label="Lancer la musique">▶</button>
+    <div class="music-copy">
+      <strong id="musicTitle">Spectr Radio</strong>
+      <span id="musicArtist">Morceau de la soirée</span>
+    </div>
+    <label class="volume-control" aria-label="Volume de la musique">
+      <span>VOL</span>
+      <input id="musicVolume" type="range" min="0" max="1" step="0.05" value="0.65">
+    </label>
+    <audio id="musicPlayer" loop preload="metadata"></audio>
+  </aside>
+
+  <div class="dialog-layer" id="dialogLayer" hidden role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <div class="dialog-box">
+      <button class="dialog-close" id="dialogClose" type="button" aria-label="Fermer">×</button>
+      <div class="dialog-kicker" id="dialogKicker"></div>
+      <h3 id="dialogTitle"></h3>
+      <div class="dialog-text" id="dialogText"></div>
+      <div class="dialog-choices" id="dialogChoices"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="game.js"></script>
+</body>
+</html>
